@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dineshprabha.mytstore.data.Product
 import com.dineshprabha.mytstore.databinding.ProductRvItemBinding
+import com.dineshprabha.mytstore.helper.getProductPrice
 
 class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.BestProductsViewHolder>(){
 
@@ -21,12 +22,11 @@ class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.BestProductsV
             binding.apply {
 
                 Glide.with(itemView).load(product.images[0]).into(imgProduct)
-                product.offerPercentage?.let {
-                    val remainingPricePercentage = 1f - it
-                    val priceAfterOffer = remainingPricePercentage * product.price
-                    tvNewPrice.text = "Rs. ${String.format("%.2f", priceAfterOffer)}"
-                    tvPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                }
+
+                val priceAfterOffer = product.offerPercentage.getProductPrice(product.price)
+                tvNewPrice.text = "Rs. ${String.format("%.2f", priceAfterOffer)}"
+                tvPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+
                 if (product.offerPercentage == null)
                     tvNewPrice.visibility = View.INVISIBLE
                 tvName.text = product.name

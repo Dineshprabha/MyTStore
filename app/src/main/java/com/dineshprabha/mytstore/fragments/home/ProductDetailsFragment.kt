@@ -4,7 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +19,17 @@ import com.dineshprabha.mytstore.activities.ShoppingActivity
 import com.dineshprabha.mytstore.adapters.ColorsAdapter
 import com.dineshprabha.mytstore.adapters.SizesAdapter
 import com.dineshprabha.mytstore.adapters.ViewPager2Images
+import com.dineshprabha.mytstore.data.Cartproduct
 import com.dineshprabha.mytstore.databinding.FragmentProductDetailsBinding
+import com.dineshprabha.mytstore.utils.Resource
 import com.dineshprabha.mytstore.utils.hideBottomNavigationView
+import com.dineshprabha.mytstore.viewmodel.productViewModels.DetailsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ProductDetailsFragment : Fragment() {
 
     private val args by navArgs<ProductDetailsFragmentArgs>()
@@ -25,6 +38,10 @@ class ProductDetailsFragment : Fragment() {
     private val viewPagerAdapter by lazy { ViewPager2Images() }
     private val sizeAdapter by lazy { SizesAdapter() }
     private val colorsAdapter by lazy { ColorsAdapter() }
+
+    private var selectedColor: Int? = null
+    private var selectedSize: String? = null
+    private val viewModel by  viewModels<DetailsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +62,10 @@ class ProductDetailsFragment : Fragment() {
         setupColorsRv()
         setupViewPager()
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+            findNavController().navigateUp()
+        }
+
         binding.apply {
 
             tvProductName.text = product.name
@@ -60,6 +81,18 @@ class ProductDetailsFragment : Fragment() {
             imageClose.setOnClickListener {
                 findNavController().navigateUp()
             }
+
+            buttonAddToCart.setOnClickListener {
+                viewModel.addUpdateProductInCart(Cartproduct(product, 1, selectedColor, selectedSize))
+            }
+        }
+
+        sizeAdapter.onItemClick = {
+            selectedSize = it
+        }
+
+        colorsAdapter.onItemClick = {
+            selectedColor = it
         }
 
         viewPagerAdapter.differ.submitList(product.images)
@@ -69,6 +102,27 @@ class ProductDetailsFragment : Fragment() {
         product.sizes?.let {
             sizeAdapter.differ.submitList(it)
         }
+
+    viewLifecycleOwner.lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewModel.addToCart.collectLatest {
+                when(it){
+                    is Resource.Loading -> {
+                        binding.buttonAddToCart.startAnimation()
+                    }
+                    is Resource.Success -> {
+                        binding.buttonAddToCart.revertAnimation()
+                        binding.buttonAddToCart.setBackgroundColor(resources.getColor(R.color.black))
+                    }
+                    is Resource.Error -> {
+                        binding.buttonAddToCart.stopAnimation()
+                        Toast.makeText(requireContext(), it.message.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                    else -> Unit
+                }
+            }
+        }
+    }
     }
 
     private fun setupViewPager() {
