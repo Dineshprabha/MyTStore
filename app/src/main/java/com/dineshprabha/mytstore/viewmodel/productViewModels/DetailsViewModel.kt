@@ -7,7 +7,6 @@ import com.dineshprabha.mytstore.firebase.FirebaseCommon
 import com.dineshprabha.mytstore.utils.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,7 +67,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     private fun increaseQuantity(documentId : String, cartProduct: Cartproduct){
-        firebaseCommon.incrementQuantity(documentId){_, e ->
+        firebaseCommon.increaseQuantity(documentId){ _, e ->
             viewModelScope.launch {
                 if (e == null)
                     _addToCart.emit(Resource.Success(cartProduct))

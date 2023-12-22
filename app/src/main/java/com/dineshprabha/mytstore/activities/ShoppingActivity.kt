@@ -2,11 +2,19 @@ package com.dineshprabha.mytstore.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.dineshprabha.mytstore.R
 import com.dineshprabha.mytstore.databinding.ActivityShoppingBinding
+import com.dineshprabha.mytstore.utils.Resource
+import com.dineshprabha.mytstore.viewmodel.productViewModels.CartViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ShoppingActivity : AppCompatActivity() {
@@ -15,6 +23,7 @@ class ShoppingActivity : AppCompatActivity() {
         ActivityShoppingBinding.inflate(layoutInflater)
     }
 
+    val viewModel by viewModels<CartViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,5 +31,21 @@ class ShoppingActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.shoppingHostFragment)
         binding.bottomNavigation.setupWithNavController(navController)
+
+        lifecycleScope.launch {
+            viewModel.cartProducts.collectLatest {
+                when(it){
+                    is Resource.Success -> {
+                        val count = it.data?.size ?: 0
+                        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+                        bottomNavigationView.getOrCreateBadge(R.id.cartFragment).apply {
+                            number = count
+                            backgroundColor = resources.getColor(R.color.g_blue)
+                        }
+                    }
+                    else -> Unit
+                }
+            }
+        }
     }
 }
