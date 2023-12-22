@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyTStore</string>
+    <string name="rightAddress">The Right Address \n For Shopping \n Anyday</string>
+    <string name="quality">It is now very easy to reach the\nbest quality among the\nproducts on the internet!</string>
+    <string name="lets_login">Let\'s Login</string>
+    <string name="lets_register">Let\'s Register</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

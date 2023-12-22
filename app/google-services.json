@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "359317576863",
+    "project_id": "mytstore-759f8",
+    "storage_bucket": "mytstore-759f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359317576863:android:fb8cfdb93641ca21db16aa",
+        "android_client_info": {
+          "package_name": "com.dineshprabha.mytstore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqDgsvpUn3mmB19X2JMqjBbea1RNHrWzc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
