@@ -12,13 +12,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dineshprabha.mytstore.R
 import com.dineshprabha.mytstore.adapters.BestDealsAdapter
 import com.dineshprabha.mytstore.adapters.BestProductAdapter
 import com.dineshprabha.mytstore.adapters.SpecialProductsAdapter
 import com.dineshprabha.mytstore.databinding.FragmentMainCategoryBinding
 import com.dineshprabha.mytstore.utils.Resource
+import com.dineshprabha.mytstore.utils.showBottomNavigationView
 import com.dineshprabha.mytstore.viewmodel.productViewModels.MainCategoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -51,7 +54,20 @@ class MainCategoryFragment: Fragment() {
         setUpBestDealsRv()
         setupBestProducts()
 
+        specialProductsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
+        }
 
+        bestDealsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
+        }
+
+        bestProductAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
+        }
     }
 
     private fun setUpObservers() {
@@ -165,6 +181,12 @@ class MainCategoryFragment: Fragment() {
             adapter = specialProductsAdapter
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        showBottomNavigationView()
     }
 
 
