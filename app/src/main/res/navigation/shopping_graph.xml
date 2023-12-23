@@ -73,4 +73,9 @@
             android:name="products"
             app:argType="com.dineshprabha.mytstore.data.Cartproduct[]" />
     </fragment>
+    <fragment
+        android:id="@+id/userAccountFragment"
+        android:name="com.dineshprabha.mytstore.fragments.settings.UserAccountFragment"
+        android:label="UserAccountFragment"
+        tools:layout="@layout/fragment_user_account"/>
 </navigation>
