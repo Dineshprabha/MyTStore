@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -114,6 +115,14 @@ class UserAccountFragment : Fragment() {
             imageActivityResultLauncher.launch(intent)
         }
 
+        binding.imageCloseUserAccount.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+            findNavController().navigateUp()
+        }
+
     }
 
     private fun showUserInformation(data: User) {
@@ -128,19 +137,6 @@ class UserAccountFragment : Fragment() {
     private fun hideUserLoading() {
         binding.apply {
             progressbarAccount.visibility = View.GONE
-            imageUser.visibility = View.INVISIBLE
-            imageEdit.visibility = View.INVISIBLE
-            edFirstName.visibility = View.INVISIBLE
-            edLastName.visibility = View.INVISIBLE
-            edEmail.visibility = View.INVISIBLE
-            tvUpdatePassword.visibility = View.INVISIBLE
-            buttonSave.visibility = View.INVISIBLE
-        }
-    }
-
-    private fun showUserLoading() {
-        binding.apply {
-            progressbarAccount.visibility = View.VISIBLE
             imageUser.visibility = View.VISIBLE
             imageEdit.visibility = View.VISIBLE
             edFirstName.visibility = View.VISIBLE
@@ -148,6 +144,19 @@ class UserAccountFragment : Fragment() {
             edEmail.visibility = View.VISIBLE
             tvUpdatePassword.visibility = View.VISIBLE
             buttonSave.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showUserLoading() {
+        binding.apply {
+            progressbarAccount.visibility = View.VISIBLE
+            imageUser.visibility = View.INVISIBLE
+            imageEdit.visibility = View.INVISIBLE
+            edFirstName.visibility = View.INVISIBLE
+            edLastName.visibility = View.INVISIBLE
+            edEmail.visibility = View.INVISIBLE
+            tvUpdatePassword.visibility = View.INVISIBLE
+            buttonSave.visibility = View.INVISIBLE
         }
     }
 
