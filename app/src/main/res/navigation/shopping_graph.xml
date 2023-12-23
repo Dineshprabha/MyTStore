@@ -78,4 +78,9 @@
         android:name="com.dineshprabha.mytstore.fragments.settings.UserAccountFragment"
         android:label="UserAccountFragment"
         tools:layout="@layout/fragment_user_account"/>
+    <fragment
+        android:id="@+id/allOrdersFragment"
+        android:name="com.dineshprabha.mytstore.fragments.settings.AllOrdersFragment"
+        android:label="AllOrdersFragment"
+        tools:layout="@layout/fragment_orders"/>
 </navigation>
