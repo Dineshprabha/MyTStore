@@ -38,7 +38,7 @@ class CartViewModel @Inject constructor(
             is Resource.Success -> {
                 calculatePrice(it.data!!)
             }
-            else -> Unit
+            else -> null
         }
     }
 
@@ -52,8 +52,8 @@ class CartViewModel @Inject constructor(
 
     }
 
-    private fun calculatePrice(data: List<Cartproduct>): Any {
-        return data.sumByDouble {cartproduct ->
+    private fun calculatePrice(data: List<Cartproduct>): Float {
+        return data.sumByDouble { cartproduct ->
             (cartproduct.product.offerPercentage.getProductPrice(cartproduct.product.price) * cartproduct.quantity).toDouble()
         }.toFloat()
     }
