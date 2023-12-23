@@ -27,7 +27,9 @@ class OrderViewModel @Inject constructor(
 
     fun placeOrder(order: Order){
         viewModelScope.launch { _order.emit(Resource.Loading()) }
+
         firestore.runBatch { batch ->
+
             firestore.collection("user")
                 .document(auth.uid!!)
                 .collection("orders")
